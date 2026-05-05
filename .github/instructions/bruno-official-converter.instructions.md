@@ -11,7 +11,7 @@ To generate the Bruno collection from OpenAPI specification, you need to follow 
 1. Check if the npm package @usebruno/converters is installed. You can find the package documentation at: https://www.npmjs.com/package/@usebruno/converters
 2. Implement the conversion logic. you can find the sample code snippet at the end of this file.
 3. Run the conversion logic by providing the path to your OpenAPI YAML file and the desired output path for the generated Bruno collection in YAML format.
-4. After running the conversion logic, you should have a generated Bruno collection in YAML format but the conversion process is not complete yet. Last step is using Bruno CLI to convert this flat collection file to structured Bruno collection. In order to do this, follow the instructions at https://docs.usebruno.com/bru-cli/import
+4. After running the conversion logic, you should have a generated a single YAML file representing a Bruno collection but the conversion process is not complete yet. Last step is using Bruno CLI to convert this flat collection file to structured Bruno collection. In order to do this, follow the instructions at https://docs.usebruno.com/bru-cli/import
 
 # Sample Code Snippet
 This is a sample code snippet demonstrating how to use the OpenAPI to Bruno converter in a Node.js environment. The code reads an OpenAPI YAML file, converts it to a Bruno collection using the converter.
