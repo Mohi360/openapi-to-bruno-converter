@@ -5,14 +5,86 @@ applyTo: '*.yaml, *.yml'
 
 # Incremental Bruno collection conversion
 Use incremental conversion to update and maintain existing collections when there are already Bruno collections present and you want to modify or enhance the collection to align with changes in the new version of the OpenAPI specification. For incremental conversion, you need to have access to 3 materials: New version of the OpenAPI specification, Previous version of the OpenAPI specification, and existing corresponding Bruno collection.
-To process the incremental conversion, you can follow these steps:
-- Find both previous and new versions of the OpenAPI specifications that correspond to the existing Bruno collection.
-- Ask user confirmation on the previous and new version of OpenAPI specifications and to be used for the incremental conversion as well as corresponding existing Bruno collection. This ensures that you are working with the correct materials and that the user is aware of the versions being used for the conversion process.
-- Analyze the differences between the previous OpenAPI specification and the new version to identify the changes that need to be reflected in the Bruno collection. This includes changes in endpoints, request/response schemas, authentication methods, and any other relevant aspects of the API.
-- Show the list of changes to the user and ask for confirmation before proceeding with the conversion. This allows the user to review the proposed changes and ensure that they align with their expectations and requirements before any modifications are made to the existing collection.
-- Analyze the existing Bruno collection files to understand the current structure, request definitions, environment variables, etc. This will help you determine how to update the collection to align with the changes in the OpenAPI specification while preserving any customizations or modifications that have been made. To undrestand the existing collection structure and request definitions, you can refer to the documentation at: ./instructions/bruno.instructions.md
-- show the proposed changes to the user and ask for confirmation before applying the updates to the existing collection. This allows the user to review the proposed changes and ensure that they align with their expectations and requirements before any modifications are made to the existing collection.
-- Apply the necessary updates to the existing Bruno collection files based on the changes identified in the OpenAPI specification. This may involve adding new request files, updating existing request definitions, modifying environment variables, and making any other necessary adjustments to ensure that the collection accurately reflects the changes in the OpenAPI specification while preserving any customizations or modifications that have been made.
 
-Use this approach when there are existing Bruno collection files and you want to update and maintain the collection while preserving any customizations or modifications that have been made. 
+To process the incremental conversion, follow these steps in order:
+
+## Step 1 — Confirm materials
+- Find both the previous and new versions of the OpenAPI specifications and the existing Bruno collection that corresponds to the previous version.
+- Ask the user to confirm which previous spec, new spec, and existing collection will be used. This ensures you are working with the correct materials before making any changes.
+
+## Step 2 — Analyse spec differences
+- Analyse the differences between the previous and new OpenAPI specifications. This includes changes in endpoints (added, removed, renamed), request/response schemas, path parameters, authentication methods, server URLs, tag names, and any other relevant aspects.
+- Show the full list of changes to the user and ask for confirmation before proceeding. This allows the user to review the proposed changes and ensure they align with their expectations.
+
+## Step 3 — Generate the new collection
+- Run `bru import` on the new OpenAPI spec to produce a fresh collection in a new versioned folder (e.g. `Bruno Collections/API Name (vX.Y.Z)`):
+  ```bash
+  bru import openapi \
+    --source "./OpenAPI Specifications/NewApi.yaml" \
+    --output "./Bruno Collections/API Name (vX.Y.Z)" \
+    --collection-name "API Name (vX.Y.Z)" \
+    --group-by tags
+  ```
+- After import, inspect the output and correct any artefacts introduced by quirks in the OpenAPI spec (e.g. leading spaces in URLs, wrong body `type`, malformed `Content-Type` header values, missing request bodies).
+
+## Step 4 — Ask whether to cascade manual modifications
+Before performing any detection or cascade work, ask the user explicitly:
+
+> A previous collection exists. Would you like to cascade any manual modifications from it into the new collection, or start fresh?
+> - **Cascade** — detect and port customisations (assertions, scripts, docs, headers, etc.) from the previous collection
+> - **Fresh** — leave the new collection exactly as generated by `bru import`
+
+**If the user chooses Fresh**: skip Steps 4a–4e entirely and proceed directly to Step 5.
+
+**If the user chooses Cascade**: continue with the steps below.
+
+## Step 5 — Detect and cascade manual modifications
+Its purpose is to ensure that any work the user invested in the previous collection is not lost.
+
+### 5a — Build a clean baseline of the previous collection
+Generate a fresh import of the **previous** OpenAPI spec into a temporary directory so you have a baseline that represents what the previous collection looked like before any manual edits:
+```bash
+bru import openapi \
+  --source "./OpenAPI Specifications/PreviousApi.yaml" \
+  --output "/tmp/baseline_previous" \
+  --collection-name "API Name (vPREV)" \
+  --group-by tags
+```
+
+### 5b — Diff baseline against the actual previous collection
+Compare every file in the temporary baseline against the corresponding file in the actual previous collection to identify lines that were added, changed, or removed by the user (not by `bru import`):
+```bash
+diff -rq /tmp/baseline_previous "Bruno Collections/API Name (vPREV)"
+```
+For each file reported as different, run a detailed diff:
+```bash
+diff /tmp/baseline_previous/path/to/file.yml "Bruno Collections/API Name (vPREV)/path/to/file.yml"
+```
+
+### 5c — Classify each modification
+For every detected difference, determine whether it is:
+- **User customisation** — assertions, test scripts, pre/post-request scripts, custom docs, extra headers, auth overrides, variable references, or any other intentional change the user made.
+- **Artefact** — noise introduced by a previous import fix (e.g. a body type correction you applied). These should not be cascaded.
+
+### 5d — Show findings and confirm
+Present a summary of all found customisations to the user, grouped by file, and ask for confirmation before applying them to the new collection. Example format:
+
+> **Manual modifications found in v11 collection:**
+> - `CR_-_FraudEvaluationAssessment/Evaluate.yml` — added `runtime: assertions` block; extended `docs:` field
+>
+> Cascade these to the new v12 collection?
+
+### 5e — Apply to the new collection
+After user confirmation, port each customisation to the corresponding file in the new collection:
+- Map the previous collection's folder/file to its equivalent in the new collection (accounting for renamed folders or files due to tag changes).
+- Apply the customisation to the correct location in the new file, respecting any structural differences introduced by the new spec version.
+- If a corresponding file no longer exists in the new collection (e.g. an endpoint was removed), inform the user and skip that customisation.
+
+## Step 6 — Review and verify
+- Read the updated files in the new collection to confirm all customisations landed correctly and the YAML structure is valid.
+- Report what was cascaded, what was skipped (and why), and what the new collection folder path is.
+
+---
+
+Use this approach when there are existing Bruno collection files and you want to update and maintain the collection while preserving any customisations or modifications that have been made. For collection structure and request file format, refer to `./instructions/bruno.instructions.md`.
 
