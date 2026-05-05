@@ -17,4 +17,22 @@ This file provides instructions for GitHub Copilot to generate Bruno collections
 2. **Incremental Generation**: Use incremental generation to update and maintain existing collections when there are already Bruno collections present for given OpenAPI spec but is outdated and you want to modify or enhance the collection to align with changes in the new version of the OpenAPI specification. 
 To process the incremental generation, you can follow instructions at: ./instructions/bruno-incremental-conversion.instructions.md
 
+3. **Post-Generation Enhancements**: After either full or incremental generation, the collection is functional but minimal. Apply one or more enhancement skills to add validation, observability, and test coverage. Each skill is independent and can be applied selectively based on user preference:
+
+   | Enhancement | Skill file |
+   |---|---|
+   | Declarative assertions (status, headers, body, response time) | `bruno-enhancement-assertions.skill.md` |
+   | Chai.js test scripts for complex validation | `bruno-enhancement-tests.skill.md` |
+   | Post-response data extraction for request chaining | `bruno-enhancement-post-response-scripts.skill.md` |
+   | Pre-request scripts for dynamic headers and timestamps | `bruno-enhancement-pre-request-scripts.skill.md` |
+   | Dynamic variables in request bodies | `bruno-enhancement-dynamic-variables.skill.md` |
+   | Collection-level shared headers and scripts | `bruno-enhancement-collection-settings.skill.md` |
+   | Folder-level shared tests and headers | `bruno-enhancement-folder-settings.skill.md` |
+   | Environment file enrichment with secrets and ID placeholders | `bruno-enhancement-environments.skill.md` |
+   | Path parameter wiring to environment variables | `bruno-enhancement-path-parameters.skill.md` |
+   | Request documentation from OpenAPI descriptions | `bruno-enhancement-documentation.skill.md` |
+   | Data-driven testing with CSV/JSON files | `bruno-enhancement-data-driven-testing.skill.md` |
+
+   Ask the user which enhancements to apply, or apply all if instructed.
+
 

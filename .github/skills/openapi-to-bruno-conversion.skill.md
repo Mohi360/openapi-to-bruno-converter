@@ -37,6 +37,24 @@ bru import openapi \
 7. Apply updates: add/update requests, env vars, scripts, etc.
 8. Preserve customizations
 
+## Post-Generation Enhancement Step
+
+After full or incremental generation, the collection is functional but minimal. Apply enhancement skills to make it production-ready. Each skill is independent — apply only the ones needed:
+
+| Enhancement skill | What it adds |
+|---|---|
+| `bruno-enhancement-assertions.skill.md` | Declarative status, header, body, and response time checks |
+| `bruno-enhancement-tests.skill.md` | Chai.js test scripts for complex validation |
+| `bruno-enhancement-post-response-scripts.skill.md` | Extract IDs/tokens from responses for request chaining |
+| `bruno-enhancement-pre-request-scripts.skill.md` | Inject trace IDs, timestamps, dynamic headers |
+| `bruno-enhancement-dynamic-variables.skill.md` | Replace empty body placeholders with `{{$...}}` variables |
+| `bruno-enhancement-collection-settings.skill.md` | Shared headers and scripts via `collection.yml` |
+| `bruno-enhancement-folder-settings.skill.md` | Folder-scoped headers and tests via `folder.yml` |
+| `bruno-enhancement-environments.skill.md` | Richer environment files with secrets and ID placeholders |
+| `bruno-enhancement-path-parameters.skill.md` | Wire path params to `{{envVar}}` references |
+| `bruno-enhancement-documentation.skill.md` | Add `docs:` blocks from OpenAPI descriptions |
+| `bruno-enhancement-data-driven-testing.skill.md` | CSV/JSON data files for parameterised test runs |
+
 ## Best Practices
 - Always confirm with user before making changes
 - Preserve customizations in existing collections

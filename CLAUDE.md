@@ -65,6 +65,24 @@ Critical rules (see the instruction file for examples):
 - Script type must be `tests` (not `test`)
 - Environment files go in `environments/*.yml`; mark secrets with `secret: true`
 
+## Post-Generation Enhancements
+
+After generating a collection, apply enhancement skills to make it production-ready. Each skill is independent — ask the user which to apply, or apply all if instructed. All skill files live in `.github/skills/`:
+
+| Skill file | What it adds |
+|---|---|
+| `bruno-enhancement-assertions.skill.md` | Declarative status, header, body, and response time checks |
+| `bruno-enhancement-tests.skill.md` | Chai.js test scripts for complex validation |
+| `bruno-enhancement-post-response-scripts.skill.md` | Extract IDs/tokens from responses for request chaining |
+| `bruno-enhancement-pre-request-scripts.skill.md` | Inject trace IDs, timestamps, and dynamic headers |
+| `bruno-enhancement-dynamic-variables.skill.md` | Replace empty body placeholders with `{{$...}}` built-in variables |
+| `bruno-enhancement-collection-settings.skill.md` | Shared headers and scripts via `collection.yml` |
+| `bruno-enhancement-folder-settings.skill.md` | Folder-scoped headers and tests via `folder.yml` |
+| `bruno-enhancement-environments.skill.md` | Richer environment files with secrets and ID placeholders |
+| `bruno-enhancement-path-parameters.skill.md` | Wire path params to `{{envVar}}` references |
+| `bruno-enhancement-documentation.skill.md` | Add `docs:` blocks sourced from OpenAPI descriptions |
+| `bruno-enhancement-data-driven-testing.skill.md` | CSV/JSON data files for parameterised test runs |
+
 ## Agent Behaviour
 
 When asked to convert an OpenAPI spec:
@@ -72,3 +90,4 @@ When asked to convert an OpenAPI spec:
 2. Check whether a Bruno collection already exists for that version → choose full or incremental workflow
 3. Confirm materials and proposed changes with the user before writing files
 4. Apply the conversion, then verify the output matches the OpenCollection spec rules in the skill files
+5. Ask which enhancements to apply (or apply all if instructed), then follow each enhancement skill file

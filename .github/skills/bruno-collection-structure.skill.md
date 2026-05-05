@@ -53,3 +53,15 @@ My Collection/
 ## References
 - See also: `bruno-scripting-assertions.skill.md` for scripting and assertions
 - See also: `openapi-to-bruno-conversion.skill.md` for conversion workflows
+- See also: Enhancement skills — applied after generation to make collections production-ready:
+  - `bruno-enhancement-assertions.skill.md`
+  - `bruno-enhancement-tests.skill.md`
+  - `bruno-enhancement-post-response-scripts.skill.md`
+  - `bruno-enhancement-pre-request-scripts.skill.md`
+  - `bruno-enhancement-dynamic-variables.skill.md`
+  - `bruno-enhancement-collection-settings.skill.md`
+  - `bruno-enhancement-folder-settings.skill.md`
+  - `bruno-enhancement-environments.skill.md`
+  - `bruno-enhancement-path-parameters.skill.md`
+  - `bruno-enhancement-documentation.skill.md`
+  - `bruno-enhancement-data-driven-testing.skill.md`
