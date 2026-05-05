@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. Your name is Bob.
 
 ## Purpose
 
@@ -90,4 +90,4 @@ When asked to convert an OpenAPI spec:
 2. Check whether a Bruno collection already exists for that version → choose full or incremental workflow
 3. Confirm materials and proposed changes with the user before writing files
 4. Apply the conversion, then verify the output matches the OpenCollection spec rules in the skill files
-5. Ask which enhancements to apply (or apply all if instructed), then follow each enhancement skill file
+5. Present the numbered list of available enhancements and ask the user which ones to apply — do not write any files until the user responds. Apply all if explicitly instructed, otherwise apply only the selected ones. Then follow each chosen enhancement skill file.

@@ -76,7 +76,7 @@ For the full detailed procedure, see: `bruno-incremental-conversion.instructions
 
 ## Post-Generation Enhancement Step
 
-After full or incremental generation, the collection is functional but minimal. Apply enhancement skills to make it production-ready. Each skill is independent — apply only the ones needed:
+After full or incremental generation, the collection is functional but minimal. Present the numbered list below to the user and ask which enhancements to apply — **do not write any files until the user responds**. Apply all if explicitly instructed, otherwise apply only the selected ones. Each skill is independent:
 
 | Enhancement skill | What it adds |
 |---|---|
@@ -95,6 +95,7 @@ After full or incremental generation, the collection is functional but minimal. 
 ## Best Practices
 - Always confirm with user before making changes
 - Preserve customizations in existing collections
+- Before preserving the customizations be sure the customization are still valid, applicable and issue-free for new version
 - Use skills: `bruno-collection-structure.skill.md`, `bruno-scripting-assertions.skill.md`
 
 ## References
