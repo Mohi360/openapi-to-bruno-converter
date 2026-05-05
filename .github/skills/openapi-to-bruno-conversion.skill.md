@@ -1,16 +1,31 @@
 ---
 description: 'Skill for converting OpenAPI specifications to Bruno collections, including both full and incremental workflows. Use this skill to automate or guide the conversion process.'
-version: 1.0.0
+version: 1.1.0
 ---
 
 # OpenAPI to Bruno Conversion Skill
 
 ## Full Generation Workflow
-1. Use the official converter (`@usebruno/converters` npm package)
-2. Input: OpenAPI YAML file
-3. Output: Flat Bruno collection YAML/JSON
-4. Import to Bruno CLI to create structured collection
-5. See: `bruno-official-converter.instructions.md` for code and CLI details
+
+Check the Bruno CLI version first (`bru --version`), then choose the appropriate method:
+
+### Method 1: Bruno CLI direct import (preferred — requires bru CLI v3.x or later)
+```bash
+bru import openapi \
+  --source "./OpenAPI Specifications/MyApi.yaml" \
+  --output "./Bruno Collections/API Name (vX.Y.Z)" \
+  --collection-name "API Name (vX.Y.Z)" \
+  --group-by tags
+```
+- `--group-by tags` groups requests by OpenAPI `tags` (recommended)
+- `--group-by path` groups by URL path structure instead
+- Produces a ready-to-use structured collection in one step
+
+### Method 2: Programmatic conversion (fallback — when bru CLI < v3 or unavailable)
+1. Use `@usebruno/converters` npm package (`openApiToBruno` function)
+2. Parse the YAML spec with `js-yaml` (`yamlToJson` is **not** exported by current package versions)
+3. Write the output JSON, then import with `bru import`
+4. See: `bruno-official-converter.instructions.md` for code details
 
 ## Incremental Generation Workflow
 1. Identify previous and new OpenAPI specs and corresponding Bruno collection

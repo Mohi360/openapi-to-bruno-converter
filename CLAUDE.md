@@ -1,0 +1,74 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Purpose
+
+This repository is a PoC for generating and maintaining Bruno API collections from OpenAPI specifications. Bruno is a Git-first API client that stores collections as YAML files following the [OpenCollection specification](https://spec.opencollection.com/).
+
+## Repository Layout
+
+```
+OpenAPI Specifications/   # Source OpenAPI YAML files
+Bruno Collections/        # Output Bruno collections (one folder per spec version)
+.github/skills/           # Shared skill definitions (used by both GitHub and Claude agents)
+.github/instructions/     # Detailed workflow instructions
+node_modules/             # @usebruno/converters and @usebruno/schema are pre-installed
+```
+
+Collection folders are named `API Name (vX.Y.Z)` — read the OpenAPI spec to determine the API name and version.
+
+## Skills
+
+All domain knowledge lives in `.github/skills/` and is shared across GitHub Copilot and Claude:
+
+- **Collection structure & naming** → `.github/skills/bruno-collection-structure.skill.md`
+- **Scripting, assertions, dynamic variables** → `.github/skills/bruno-scripting-assertions.skill.md`
+- **Full and incremental conversion workflows** → `.github/skills/openapi-to-bruno-conversion.skill.md`
+
+Always read the relevant skill files before generating or modifying Bruno collections.
+
+## Conversion Workflows
+
+### Full Generation (no existing Bruno collection)
+
+Use `bru import` directly on the OpenAPI source YAML (Bruno CLI v3.x supports this natively):
+
+```bash
+bru import openapi \
+  --source "./OpenAPI Specifications/MyApi.yaml" \
+  --output "./Bruno Collections/API Name (vX.Y.Z)" \
+  --collection-name "API Name (vX.Y.Z)" \
+  --group-by tags
+```
+
+`--group-by tags` organises requests into folders matching the OpenAPI `tags` on each operation. Use `--group-by path` to group by URL path structure instead.
+
+The `@usebruno/converters` package is also installed (`node_modules/@usebruno/converters`) if programmatic conversion is needed — it exports `openApiToBruno(jsonSpec)`. Parse the YAML first with `js-yaml` since `yamlToJson` is not exported by this version. See `.github/instructions/bruno-official-converter.instructions.md` for the code snippet.
+
+### Incremental Generation (existing Bruno collection needs updating)
+
+See `.github/instructions/bruno-incremental-conversion.instructions.md`. The workflow requires:
+1. Previous OpenAPI spec version
+2. New OpenAPI spec version
+3. Existing Bruno collection
+
+Always confirm the three materials with the user before proceeding, show diffs before applying, and preserve any customisations.
+
+## Bruno YAML Format Reference
+
+The complete YAML format — request structure, auth types, body types, environment files, folder files, scripting API, CI/CD patterns — is documented in `.github/instructions/bruno.instructions.md`. Read it before writing any `.yml` collection files.
+
+Critical rules (see the instruction file for examples):
+- `opencollection.yml` with an `opencollection: 1.0.0` header is **required** at every collection root
+- Request files use `info:` / `http:` / `runtime:` / `settings:` top-level keys — never `meta:`
+- Script type must be `tests` (not `test`)
+- Environment files go in `environments/*.yml`; mark secrets with `secret: true`
+
+## Agent Behaviour
+
+When asked to convert an OpenAPI spec:
+1. Read the spec to determine API name and version
+2. Check whether a Bruno collection already exists for that version → choose full or incremental workflow
+3. Confirm materials and proposed changes with the user before writing files
+4. Apply the conversion, then verify the output matches the OpenCollection spec rules in the skill files
