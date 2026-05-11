@@ -5,6 +5,16 @@ version: 1.2.0
 
 # OpenAPI to Bruno Conversion Skill
 
+## Choosing the workflow (do this before anything else)
+
+List the contents of `Bruno Collections/` and look for any folder matching `API Name (v*)` for the API you're converting — **not just the exact target version**.
+
+- **No folders for this API** → use the **Full Generation Workflow** below.
+- **Exact target folder `API Name (vX.Y.Z)` already exists** → use the **Incremental Generation Workflow**, treating that folder as the previous collection. Ask the user whether to overwrite or use a different baseline.
+- **A different version of the same API exists** (e.g. target is v14 but v13 is present) → use the **Incremental Generation Workflow**, treating that older version as the previous collection. The presence of any older version means the user has a baseline that may contain customisations, and a fresh full generation would discard the opportunity to cascade them.
+
+Never fall through to full generation just because the exact target folder is missing — older sibling versions count.
+
 ## Full Generation Workflow
 
 Check the Bruno CLI version first (`bru --version`), then choose the appropriate method:
