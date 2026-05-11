@@ -82,6 +82,9 @@ After generating a collection, apply enhancement skills to make it production-re
 | `bruno-enhancement-path-parameters.skill.md` | Wire path params to `{{envVar}}` references |
 | `bruno-enhancement-documentation.skill.md` | Add `docs:` blocks sourced from OpenAPI descriptions |
 | `bruno-enhancement-data-driven-testing.skill.md` | CSV/JSON data files for parameterised test runs |
+| `bruno-enhancement-test-data-generation.skill.md` | Schema-driven fixture generation (json-schema-faker + Faker) producing the data files consumed by data-driven testing |
+
+**Prerequisite hint for test data generation:** when the user picks it, first check whether data-driven testing, path parameters, environments, and assertions have been applied. If not, recommend applying those first — generated fixtures otherwise plug into nothing or validate nothing. Dynamic variables is a recommended companion (fresh-per-request timestamps/trace IDs that shouldn't be baked into fixtures). The full rationale lives in `bruno-enhancement-test-data-generation.skill.md` under "Prerequisites".
 
 ## Agent Behaviour
 

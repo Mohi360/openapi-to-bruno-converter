@@ -92,7 +92,7 @@ console.log(`Iteration ${iterationIndex + 1}/${total}: ${techniqueType}`);
 ```bash
 bru run "CR_-_FraudEvaluationAssessment/EvCR Start a fraud evaluation for a production transaction set.yml" \
   --env "SwaggerHub Sandbox" \
-  --data ./data/evaluate-scenarios.csv \
+  --csv-file-path ./data/evaluate-scenarios.csv \
   --reporter-html results.html
 ```
 
